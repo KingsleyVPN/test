@@ -309,15 +309,13 @@ username-as-common-name
 auth-user-pass-verify /etc/openvpn/script/login.sh via-env
 tmp-dir "/etc/openvpn/" # 
 server 172.20.0.0 255.255.0.0
-push "redirect-gateway def1" 
-push "dhcp-option DNS 8.8.8.8"
-push "dhcp-option DNS 8.8.4.4"
-push "sndbuf 393216"
-push "rcvbuf 393216"
-tun-mtu 1400 
-mssfix 1360
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 1.1.1.1"
+push "cipher AES-128-CBC"
+push "sndbuf 0"
+push "rcvbuf 0"
+push "socket-flags TCP_NODELAY"
 verb 3
-script-security 3
 cipher AES-128-CBC
 tcp-nodelay
 up /etc/openvpn/update-resolv-conf                                                                                      
@@ -342,17 +340,15 @@ username-as-common-name
 auth-user-pass-verify /etc/openvpn/script/login.sh via-env
 tmp-dir "/etc/openvpn/" # 
 server 172.30.0.0 255.255.0.0
-push "redirect-gateway def1" 
-push "dhcp-option DNS 8.8.8.8"
-push "dhcp-option DNS 8.8.4.4"
-push "sndbuf 393216"
-push "rcvbuf 393216"
-tun-mtu 1400 
-mssfix 1360
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 1.1.1.1"
+push "cipher AES-128-CBC"
+push "sndbuf 0"
+push "rcvbuf 0"
+push "socket-flags TCP_NODELAY"
 verb 3
 cipher AES-128-CBC
 tcp-nodelay
-script-security 3
 up /etc/openvpn/update-resolv-conf                                                                                      
 down /etc/openvpn/update-resolv-conf
 EOF
@@ -836,26 +832,16 @@ echo "SHELL=/bin/bash
 * * * * * /bin/bash /root/auto >/dev/null 2>&1" | crontab -
 /bin/cat <<"EOM" >/var/www/html/client.ovpn
 client
-dev tun
 proto tcp
 remote $MYIP 1194
 remote-cert-tls server
 connect-retry infinite
 resolv-retry infinite
-nobind
-tun-mtu 1500
-mssfix 1460
 persist-key
 persist-tun
 auth-user-pass
-auth none
 auth-nocache
-cipher none
-script-security 3
-cipher AES-128-CBC
-keysize 0
 setenv CLIENT_CERT 0
-reneg-sec 0
 verb 3
 # OVPN_ACCESS_SERVER_PROFILE=Tknetwork
 <ca>
